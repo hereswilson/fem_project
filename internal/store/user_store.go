@@ -68,7 +68,7 @@ func (s *PostgresUserStore) CreateUser(user *User) error {
 		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at, updated_at
 	`
-	err := s.db.QueryRow(query, user.Username, user.Email, user.PasswordHash, user.Bio).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
+	err := s.db.QueryRow(query, user.Username, user.Email, user.PasswordHash.hash, user.Bio).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (s *PostgresUserStore) GetUserByUsername(username string) (*User, error) {
 		&user.ID,
 		&user.Username,
 		&user.Email,
-		&user.PasswordHash,
+		&user.PasswordHash.hash,
 		&user.Bio,
 		&user.CreatedAt,
 		&user.UpdatedAt,
